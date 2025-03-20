@@ -8,9 +8,23 @@ body {
     height: 100%;
     position: absolute;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.names {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: space-between;
+}
+.player1, .player2 {
+    padding: 100px;
+    display: flex;
     flex-direction: column;
+}
+.player2 {
+    margin-left: auto;
 }
 .board {
     display: grid;
@@ -24,4 +38,17 @@ button {
 .display {
     margin-bottom: 100px;
     margin-top: -200px;
+}
+.reset {
+    margin-top: 100px;
+}
+.p1NameSubmit, .p2NameSubmit {
+    width: 60%;
+    height: 60%;
+
+}
+.enter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -4,22 +4,25 @@ const gameBoard = (function board() {
                  []];
     
     const insertPiece = function(player, position) {
-        if (this.board[position[0]][position[1]] == 'x' || this.board[position[0]][position[1]] == 'o')
+        if (board[position[0]][position[1]] == 'x' || board[position[0]][position[1]] == 'o')
         {
             return false;
         }
         else
         {
             // if square not occupied put in naught or cross and return true
-            this.board[position[0]][position[1]] = player.getPiece();
+            board[position[0]][position[1]] = player.getPiece();
             player.updateMoves(position);
             return true;
         }
     }
    
     const checkBoardPosition = (position) => board[position[0]][position[1]];
-    
-    return {board, insertPiece, checkBoardPosition};
+    const reset = ()=> board = [[],
+    [],
+    []];
+
+    return {board, insertPiece, checkBoardPosition,reset};
 })();
 
 
@@ -27,6 +30,7 @@ function createPlayer(pieceType, playerNumber) {
     let piece = pieceType;
     let moves = [];
     let number = playerNumber;
+    let name = "";
 
     const updateMoves = (position)=> moves.push(position);
     const getPiece = () => piece;
@@ -61,6 +65,7 @@ function createPlayer(pieceType, playerNumber) {
                     if (move[1] == 2)
                     {
                         column3Counter++;
+                        diagonalRightLeftCounter++;
                     }
                     row1Counter++;
                 }
@@ -138,7 +143,15 @@ function createPlayer(pieceType, playerNumber) {
         }
     }
     const getPlayerNumber = () => number;
-    return {updateMoves,getPiece, getPlayerNumber, checkForWin, piece};
+    const updatePlayerName = (input) => name = input;
+    const getPlayerName = ()=> name;
+    const reset = function() {
+        piece = pieceType;
+        moves = [];
+        number = playerNumber;
+        name = "";
+    };
+    return {updateMoves,getPiece, getPlayerNumber, checkForWin, updatePlayerName,getPlayerName, reset, piece, name,moves};
 }
 
 
@@ -169,7 +182,19 @@ function addPieceToBoard(buttonClicked){
             return gameBoard.insertPiece(game.getCurrentPlayersTurn(), [2,2]);
     }
 }
+function removePiecesFromScreen()
+{
+    topLeftButton.innerHTML = "";
+    topMiddleButton.innerHTML = "";
+    topRightButton.innerHTML = "";
+    middleLeftButton.innerHTML = "";
+    middleButton.innerHTML = "";
+    middleRightButton.innerHTML = "";
+    bottomLeftButton.innerHTML = "";
+    bottomMiddleButton.innerHTML = "";
+    bottomRightButton.innerHTML = "";
 
+}
 function addPieceToScreen(event) {
  
     // if a new game piece is added to the board update the screen and switch turns
@@ -205,6 +230,9 @@ function addAllEventListeners(){
     addEventButtonEventListeners(bottomMiddleButton);
     addEventButtonEventListeners(bottomRightButton);
 
+    p1textbutton.addEventListener('click', function(){ updatePlayerName(player1)});
+    p2textbutton.addEventListener('click', ()=> updatePlayerName(player2));
+    startRestButton.addEventListener('click', ()=> resetGame());
 }
 
 function removeAllEventListeners() {
@@ -231,7 +259,12 @@ function displayWinner(winningPlayer)
     {
         pieceString = "Naughts";
     }
-    display.innerHTML = `Player ${winningPlayer.getPlayerNumber()} wins playing ${pieceString}`;
+    display.innerHTML = `${winningPlayer.getPlayerName()} wins playing ${pieceString}`;
+}
+function displayReset()
+{
+    const display = document.querySelector(".display");
+    display.innerHTML = '';
 }
 const player1 = createPlayer('x', 1);
 const player2 = createPlayer('o', 2);
@@ -268,12 +301,47 @@ const game = (function gameController(player1, player2) {
     const setGameWinner = () => gameWinner = currentPlayerTurn;
     const getGameWinner = () => gameWinner;
 
+    const reset = function() {
+        currentPlayerTurn = player1;
+        gameWinner = null;
+    }
 
-    return {switchPlayerTurn, getCurrentPlayersTurn, setGameWinner, getGameWinner, currentPlayerTurn};
+    return {switchPlayerTurn, getCurrentPlayersTurn, setGameWinner, getGameWinner,reset, currentPlayerTurn};
 
 })(player1, player2);
 
 
+
+const out = document.querySelector(".out");
+const player1Name = document.querySelector('#p1Name');
+const player2Name = document.querySelector('#p2Name');
+const p1textbutton = document.querySelector('.p1NameSubmit');
+const p2textbutton = document.querySelector('.p2NameSubmit');
+const startRestButton = document.querySelector('.reset');
+
+
 addAllEventListeners();
 
+function updatePlayerName(player)
+{
+    if (player == player1)
+    {
+        player1.updatePlayerName(player1Name.value)
+    }
+    else if (player == player2)
+    {
+        player2.updatePlayerName(player2Name.value)
+    }
+}
 
+function resetGame()
+{
+    removeAllEventListeners();
+    addAllEventListeners();
+    removePiecesFromScreen();
+    game.reset();
+    gameBoard.reset();
+    player1.reset();
+    player2.reset();
+    displayReset();
+}
