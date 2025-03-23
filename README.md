@@ -4,7 +4,7 @@ Welcome to the JS-TICTAC repository, this repository serves the purpose of pract
 
 # To view the result
 
-Follow this link - ![]()
+Follow this link - [JS-TICTAC](https://raimeiraikiri.github.io/JS-TICTAC/)
 
 # About
 
@@ -21,6 +21,13 @@ Follow this link - ![]()
 
 # Result
 
+The default look of the website:
+
+![Target image the website is based upon](./imgs/defaultLook.png "Default look")
+
+Crosses win!:
+
+![Target image the website is based upon](./imgs/crossesWin.png "Crosses Win")
 
 
 # License
